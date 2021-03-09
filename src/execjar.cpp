@@ -1,5 +1,6 @@
 #include "execjar.h"
 
+#ifndef _WIN32
 char* appendCString(const char *begin, const char *end) {
 	char *newstr = strdup(begin);
 	// reallocate with additional memory for terminating null byte
@@ -7,6 +8,7 @@ char* appendCString(const char *begin, const char *end) {
 	strcat(newstr, end);
 	return newstr;
 }
+#endif
 
 void runJar(std::filesystem::path path, std::string classpath) {
 #ifndef _WIN32
@@ -40,8 +42,17 @@ void runJar(std::filesystem::path path, std::string classpath) {
 #else
 // otherwise do the hacky Windows way
 	if (system(NULL)) {
-		// std::filesystem::path::c_str() doesn't work on Windows for some reason
-		char *cmd = appendCString("java -jar ", path.string().c_str());
+		// this may have been less troublesome to do with std::string but it's too late now...
+		const char *prepend = "java -cp ";
+		// size for three strings, an extra space, and a terminating null byte
+		size_t len = strlen(prepend) + path.string().length() + 1 + classpath.length() + 1;
+		char *cmd = (char *) calloc(sizeof(char), len);
+
+		strcpy(cmd, prepend);
+		strcat(cmd, path.string().c_str());
+		strcat(cmd, " ");
+		strcat(cmd, classpath.c_str());
+
 		int result = system(cmd);
 		free(cmd);
 		if (result != 0) exit(1);
