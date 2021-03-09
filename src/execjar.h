@@ -4,4 +4,4 @@
 #include <jni.h>
 #endif
 
-void runJar(std::filesystem::path path);
+void runJar(std::filesystem::path path, std::string classpath);

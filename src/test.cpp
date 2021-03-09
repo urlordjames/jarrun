@@ -12,6 +12,6 @@ int main() {
 
 	delete dl;
 
-	if (result == CURLE_OK) runJar(temp);
+	if (result == CURLE_OK) runJar(temp, "Main");
 	else return 1;
 }

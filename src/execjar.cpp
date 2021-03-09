@@ -8,7 +8,7 @@ char* appendCString(const char *begin, const char *end) {
 	return newstr;
 }
 
-void runJar(std::filesystem::path path) {
+void runJar(std::filesystem::path path, std::string classpath) {
 #ifndef _WIN32
 // if not on Windows invoke Java Native Interface
 	JavaVMOption *options = new JavaVMOption[1];
@@ -29,7 +29,7 @@ void runJar(std::filesystem::path path) {
 	int ret = JNI_CreateJavaVM(&jvm, (void**) &env, &vm_args);
 	delete[] options;
 
-	jclass clazz = env->FindClass("Main");
+	jclass clazz = env->FindClass(classpath.c_str());
 	jmethodID meth = env->GetStaticMethodID(clazz, "main", "([Ljava/lang/String;)V");
 	jarray args = env->NewObjectArray(0, env->FindClass("java/lang/String"), 0);
 
