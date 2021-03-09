@@ -8,7 +8,7 @@ add_library(${PROJECT_NAME} STATIC
 	src/download.cpp
 	src/execjar.cpp
 )
-set_target_properties(${PROJECT_NAME} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/src)
+set_target_properties(${PROJECT_NAME} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/src)
 
 IF(NOT WIN32)
 	find_package(JNI REQUIRED)
